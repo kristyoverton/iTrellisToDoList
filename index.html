@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="toDoListApp" ng-controller="ListController">
+<head>
+
+	<meta charset="utf-8">
+	<title ng-bind="title"></title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="app.js"></script>
+	<script src="listcontroller.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-2">
+			</div>
+			<div class="col-sm-8">
+				<div class="row">
+					<div id="theList" class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-12">
+								<h1>To Do:</h1>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-7">
+								<h4>Task</h4>
+							</div>
+							<div class="col-sm-3">
+								<h4>Deadline</h4>
+							</div>
+
+						</div>
+						<div class="row task" ng-repeat="item in todos" ng-style="isOverdue($index)">
+							<div>
+								<div class="col-sm-7" style={{item.props}}>
+									<span class="glyphicon glyphicon-trash" ng-click="deleteTask($index)"></span>
+									<input type="checkbox" ng-click="toggleDone($index)" ng-model="item.done">
+									{{item.task}} 
+								</div>
+								<div class="col-sm-3" style={{item.props}}>
+									{{item.deadline | date}} 
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<button class="btn btn-xs details-btn" ng-show=!item.show ng-click="showDetails($index)">More Details </button>
+								<button class="btn btn-xs details-btn" ng-show=item.show ng-click="noDetails($index)">No Details </button>
+							</div>
+							<div class="row details" ng-show=item.show>
+								<div class="col-sm-1">
+								</div>
+								<div class="col-sm-11" style={{item.props}}> 
+									{{item.details}}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="newTask" class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-12">
+								<h1>Add a Task:</h1>
+							</div>
+						</div>
+						<div class="row" ng-show="newTaskForm.$invalid && newTaskForm.task.$dirty && newTaskForm.deadlineMonth.$dirty && newTaskForm.deadlineDay.$dirty && newTaskForm.deadlineYear.$dirty">
+							<div class="col-sm-12">
+								Please fill in all required fields. (Did you enter a valid date?)
+							</div>
+						</div>
+						<div class="row" ng-show="newTaskForm.deadlineMonth.$dirty && newTaskForm.deadlineDay.$dirty && newTaskForm.deadlineYear.$dirty && badDate">
+							<div class="col-sm-12">
+								Please enter a valid date.
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<form name="newTaskForm" novalidate ng-submit="newTaskForm.$valid && addTask(newTask)">
+									<div class="form-group">
+										<label for="task">Do This:* </label>
+										<input type="text" name="task" ng-model="newTask.task" placeholder="Another Thing To Do" ng-required="true">
+									</div>
+									<div class="form-group">
+										<label>By:* <label>
+										<select name="deadlineMonth" ng-model="newTask.deadline.month" ng-required="true">
+												<option value="00">Jan</option>
+												<option value="01">Feb</option>
+												<option value="02">Mar</option>
+												<option value="03">Apr</option>
+												<option value="04">May</option>
+												<option value="05">Jun</option>
+												<option value="06">Jul</option>
+												<option value="07">Aug</option>
+												<option value="08">Sept</option>
+												<option value="09">Oct</option>
+												<option value="10">Nov</option>
+												<option value="11">Dec</option>
+										</select>
+										<input type="number" name="deadlineDay" placeholder="1" ng-model="newTask.deadline.day" min="1" max="31" ng-required="true">
+										<input type="number" name="deadlineYear" placeholder="2015" ng-model="newTask.deadline.year" ng-required="true">
+									</div>
+									<div class="form-group">
+										<label for="details">More Details: </label>
+										<textarea rows="3" ng-model="newTask.details"></textarea>
+									</div>
+									<button class="btn btn-small details-btn">Add Task</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
